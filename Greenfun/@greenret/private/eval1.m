@@ -92,7 +92,7 @@ switch obj.deriv
         %  auxiliary quantity
         f = ( 1i * k - 1 ./ d ) ./ d .^ 2;
         %  derivative of Green function
-        Gp = cat( 3, ( f .* x ) .* area, ( f .* y ) .* area, ( f .* z ) .* area );
+        Gp = f .* cat( 3, x, y, z ) .* area;
         %   full derivative of Green function
         Gp = reshape( Gp, [], 3 );
         if ~isempty( obj.ind )
@@ -113,9 +113,9 @@ switch obj.deriv
         %  auxiliary quantity
         f = ( 1i * k - 1 ./ d ) ./ d .^ 2;
         %  surface derivative of Green function
-        F = ( bsxfun( @times, f .* x, obj.p1.nvec( :, 1 ) ) +  ...
-              bsxfun( @times, f .* y, obj.p1.nvec( :, 2 ) ) +  ...
-              bsxfun( @times, f .* z, obj.p1.nvec( :, 3 ) ) ) .* area;
+        F = f .* ( x .* obj.p1.nvec( :, 1 ) +  ...
+                   y .* obj.p1.nvec( :, 2 ) +  ...
+                   z .* obj.p1.nvec( :, 3 ) ) .* area;
         %  index to surface elements to be refined
         [ i, ~ ] = ind2sub( size( d ), obj.ind );
         %  refine surface derivative of Green function
