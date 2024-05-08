@@ -21,7 +21,7 @@ con = obj.con{ i, j };
 %  evaluate G, F, H1, H2
 if ~strcmp( key, { 'Gp', 'H1p', 'H2p' } )
   %  allocate array
-  g = zeros( obj.p1.n, obj.p2.n );
+  g = zeros( obj.p1.n, obj.p2.n , 'single', 'gpuArray' );
   %  loop over composite particles
   for i1 = 1 : size( con, 1 )
   for i2 = 1 : size( con, 2 )

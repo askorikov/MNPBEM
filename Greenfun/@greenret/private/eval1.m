@@ -19,9 +19,11 @@ function varargout = eval1( obj, k, varargin )
 pos1 = obj.p1.pos;  n1 = size( pos1, 1 );
 pos2 = obj.p2.pos;  n2 = size( pos2, 1 );
 %  area
-area = spdiag( reshape( obj.p2.area, 1, [] ) );
+area = gpuArray(single(obj.p2.area));
 
 %  difference of positions
+pos1 = gpuArray(single(pos1));
+pos2 = gpuArray(single(pos2));
 x = bsxfun( @minus, pos1( :, 1 ), pos2( :, 1 )' );
 y = bsxfun( @minus, pos1( :, 2 ), pos2( :, 2 )' );
 z = bsxfun( @minus, pos1( :, 3 ), pos2( :, 3 )' );
@@ -31,7 +33,7 @@ d = max( sqrt( x .^ 2 + y .^ 2 + z .^ 2 ), eps );
 %  Green function
 if any( strcmp( 'G', varargin ) )
   %  Green function
-  G = 1 ./ d * area;
+  G = 1 ./ d .* area;
   %  refine Green function
   if ~isempty( obj.ind )
     G( obj.ind ) = obj.g * transpose( ( 1i * k ) .^ ( 0 : obj.order ) );
@@ -39,23 +41,23 @@ if any( strcmp( 'G', varargin ) )
   G = reshape( G, [ n1, n2 ] ) .* exp( 1i * k * d );
 end
 
-switch obj.deriv 
+switch obj.deriv
   case 'norm'
     %  only normal (surface) derivative of Green function
     if ~all( strcmp( 'G', varargin ) )
       %  normal vector
       nvec = obj.p1.nvec;
       %  inner product
-      in = @( x, i ) bsxfun( @times, x, nvec( :, i ) ); 
+      in = @( x, i ) bsxfun( @times, x, nvec( :, i ) );
       %  surface derivative of Green function
       F = ( in( x, 1 ) + in( y, 2 ) + in( z, 3 ) ) .*  ...
-                               ( 1i * k - 1 ./ d ) ./ d .^ 2 * area;
+                               ( 1i * k - 1 ./ d ) ./ d .^ 2 .* area;
       if ~isempty( obj.ind )
         F( obj.ind ) = obj.f * transpose( ( 1i * k ) .^ ( 0 : obj.order ) );
       end
-      F = reshape( F, [ n1, n2 ] ) .* exp( 1i * k * d );    
+      F = reshape( F, [ n1, n2 ] ) .* exp( 1i * k * d );
     end
-      
+
     clear x y z
 
     %  reset diagonal elements of D
@@ -77,12 +79,12 @@ switch obj.deriv
           error( 'only surface derivative computed' );
         case 'd'
           varargout{ i } = d;
-      end      
+      end
     end
 
   case 'cart'
-    %  Cartesian derivatives of Green function    
-    
+    %  Cartesian derivatives of Green function
+
     if ~all( strcmp( 'G', varargin ) )
       %  use derivative of Green function
       if any( strcmp( 'Gp',  varargin ) ) ||   ...
@@ -90,7 +92,7 @@ switch obj.deriv
         %  auxiliary quantity
         f = ( 1i * k - 1 ./ d ) ./ d .^ 2;
         %  derivative of Green function
-        Gp = cat( 3, ( f .* x ) * area, ( f .* y ) * area, ( f .* z ) * area );
+        Gp = cat( 3, ( f .* x ) .* area, ( f .* y ) .* area, ( f .* z ) .* area );
         %   full derivative of Green function
         Gp = reshape( Gp, [], 3 );
         if ~isempty( obj.ind )
@@ -105,7 +107,7 @@ switch obj.deriv
                                           || any( strcmp( 'H2', varargin ) )
           F = inner( obj.p1.nvec, Gp );
         end
-    
+
       %  compute only surface derivative of Green function
       else
         %  auxiliary quantity
@@ -113,21 +115,21 @@ switch obj.deriv
         %  surface derivative of Green function
         F = ( bsxfun( @times, f .* x, obj.p1.nvec( :, 1 ) ) +  ...
               bsxfun( @times, f .* y, obj.p1.nvec( :, 2 ) ) +  ...
-              bsxfun( @times, f .* z, obj.p1.nvec( :, 3 ) ) ) * area;
+              bsxfun( @times, f .* z, obj.p1.nvec( :, 3 ) ) ) .* area;
         %  index to surface elements to be refined
         [ i, ~ ] = ind2sub( size( d ), obj.ind );
         %  refine surface derivative of Green function
         F( obj.ind ) = inner( obj.p1.nvec( i, : ), obj.f ) *  ...
                                      transpose( ( 1i * k ) .^ ( 0 : obj.order ) );
         %  reshape Green function and multiply with phase factor
-        F = reshape( F, size( d ) ) .* exp( 1i * k * d );     
-      end  
+        F = reshape( F, size( d ) ) .* exp( 1i * k * d );
+      end
     end
 
     clear x y z
 
     %  reset diagonal elements of D
-    d( d == eps ) = 0;    
+    d( d == eps ) = 0;
     %  allocate output
     varargout = cell( length( varargin ) );
     %  assign output
@@ -146,9 +148,9 @@ switch obj.deriv
         case 'H1p'
           varargout{ i } = Gp + 2 * pi * outer( obj.p1.nvec, d == 0 );
         case 'H2p'
-          varargout{ i } = Gp - 2 * pi * outer( obj.p1.nvec, d == 0 );          
+          varargout{ i } = Gp - 2 * pi * outer( obj.p1.nvec, d == 0 );
         case 'd'
           varargout{ i } = d;
-      end      
+      end
     end
 end
