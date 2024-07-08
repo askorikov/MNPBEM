@@ -19,7 +19,7 @@ function varargout = eval1( obj, k, varargin )
 pos1 = obj.p1.pos;  n1 = size( pos1, 1 );
 pos2 = obj.p2.pos;  n2 = size( pos2, 1 );
 %  area
-area = gpuArray(single(obj.p2.area));
+area = gpuArray(single(reshape(obj.p2.area, 1, [])));
 
 %  difference of positions
 pos1 = gpuArray(single(pos1));
