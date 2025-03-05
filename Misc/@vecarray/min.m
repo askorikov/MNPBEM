@@ -8,4 +8,4 @@ function c = min( obj, opt )
 %  Output
 %    c      :  minimum of vector array
 
-c = min( vecnorm( subsref( obj, substruct( '()', { opt } ) ) ) );
+c = min( vecnorm2( subsref( obj, substruct( '()', { opt } ) ) ) );

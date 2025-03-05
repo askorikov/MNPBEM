@@ -8,4 +8,4 @@ function c = max( obj, opt )
 %  Output
 %    c      :  maximum of vector array or [] for truecolor array
 
-c = max( vecnorm( subsref( obj, substruct( '()', { opt } ) ) ) );
+c = max( vecnorm2( subsref( obj, substruct( '()', { opt } ) ) ) );

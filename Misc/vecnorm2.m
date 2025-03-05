@@ -1,9 +1,9 @@
-function n = vecnorm( v, key )
-%  VECNORM - Norm of vector array.
+function n = vecnorm2( v, key )
+%  vecnorm2 - 2-norm of a vector array.
 %
 %  Usage :
-%    n = vecnorm( v )
-%    n = vecnorm( v, 'max' )
+%    n = vecnorm2( v )
+%    n = vecnorm2( v, 'max' )
 %  Input
 %    v      :  vector array of size (:,3,siz)
 %  Output

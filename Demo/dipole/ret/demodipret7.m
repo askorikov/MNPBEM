@@ -50,7 +50,7 @@ spec = spectrum( dir, op );
 %  farfield radiation
 f = farfield( spec, sig );
 %  norm of Poynting vector
-s = vecnorm( 0.5 * real( cross( f.e, conj( f.h ), 2 ) ) );
+s = vecnorm2( 0.5 * real( cross( f.e, conj( f.h ), 2 ) ) );
 
 %%  computation of electric field
 %  mesh for calculation of electric field

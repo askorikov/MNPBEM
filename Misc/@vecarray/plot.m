@@ -9,7 +9,7 @@ function obj = plot( obj, opt, varargin )
 %  get vector array
 vec = subsref( obj, substruct( '()', { opt } ) );
 %  vector length
-len = vecnorm( vec );  
+len = vecnorm2( vec );  
 %  apply scaling function and scaling factor
 if opt.scale > 0
   scale =   opt.scale * opt.sfun( len / max( len ) );

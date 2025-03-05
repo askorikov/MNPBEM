@@ -24,7 +24,7 @@ if ~isfield( op, 'scale' );  op.scale = 1;            end
 if ~isfield( op, 'fun'   );  op.sfun = @( x ) ( x );  end
 
 %  vector length
-len = vecnorm( vec );
+len = vecnorm2( vec );
 %  scaling function
 scale =   op.scale * op.sfun( len / max( len ) );
 %  cone plot

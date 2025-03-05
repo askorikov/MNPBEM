@@ -68,7 +68,7 @@ f = field( g, sig );
 
 %  final plot
 plot( p, 'EdgeColor', 'b' );
-plot( p2, vecnorm( f.e ) );
+plot( p2, vecnorm2( f.e ) );
 
 axis equal off
 colormap hot( 255 );

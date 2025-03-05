@@ -76,7 +76,7 @@
 % * <matlab:doc('patchcurvature') patchcurvature.m> - Principal curvature values of a triangulated mesh. 
 % * <matlab:doc('subarray') subarray.m> - Pass arguments to subsref.
 % * <matlab:edit('units') units.m> - Conversion between eV and nm.
-% * <matlab:doc('vecnorm') vecnorm.m> - Norm of vector array.
+% * <matlab:doc('vecnorm2') vecnorm2.m> - 2-norm of a vector array.
 % * <matlab:doc('vecnormalize') vecnormalize.m> - Normalize vector array.
 %
 %% Particles

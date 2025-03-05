@@ -77,7 +77,7 @@ spec = spectrum( dir, op );
 %  farfield radiation
 f = farfield( spec, sig ) + farfield( dip, spec, enei );
 %  norm of Poynting vector
-s = vecnorm( 0.5 * real( cross( f.e, conj( f.h ), 2 ) ) );
+s = vecnorm2( 0.5 * real( cross( f.e, conj( f.h ), 2 ) ) );
 
 %  radiation pattern
 polar( theta, s / max( s ) );
@@ -96,7 +96,7 @@ spec = spectrum( pinfty, op );
 %  farfield radiation
 f = farfield( spec, sig ) + farfield( dip, spec, enei );
 %  norm of Poynting vector
-s = vecnorm( 0.5 * real( cross( f.e, conj( f.h ), 2 ) ) );
+s = vecnorm2( 0.5 * real( cross( f.e, conj( f.h ), 2 ) ) );
 
 %  radiation pattern
 plot( trispherescale( spec.pinfty, s ), s );
